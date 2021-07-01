@@ -23,3 +23,33 @@ def get_value_count_for_each_column(folder, file):
     writer.save()
     output_df = pd.DataFrame(unique_value_count_list, columns=df_cols)
     return unique_value_count_list, output_df
+
+##
+
+idc_dat = pd.read_excel('D:\\Shweta\\799_cases\\2021_02_09_799_cases_Orchids2010_2018_rb_dk.xlsx')
+
+survivor_1 = ['Survivor: Lost to follow.up', 'Survivor: Disease free', 'Survivor: With recurrence',
+              'Survivor: metastatic disease', 'Survivor: with Mets', 'Survivor: primary surgery not done',
+              'Survivor: with disease', 'Survivor: with recurrence']
+
+deceased_0 = ['Deceased']
+
+
+survival_status = []
+for value in idc_dat.last_follow_up_status:
+    if value in survivor_1:
+        survival_status.append(1)
+    elif value ==  'Deceased':
+        survival_status.append(0)
+    else:
+        survival_status.append('NA')
+
+import statsmodels.api as sm
+
+x = idc_dat['age_at_diagnosis']
+y = pd.Series(survival_status)
+
+model = sm.OLS(y, x, missing='drop')
+
+idc_dat.dtypes
+
